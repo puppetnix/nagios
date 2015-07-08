@@ -10,4 +10,9 @@ nagios_command  { 'resource title':
         ensure => present,
         notify  => Service["nagios"],
    }
+	file { 'nagios_command':
+	ensure => present,
+	mode => '0644',
+	path => "/etc/nagios/nagios_command.cfg"
+	}
 }

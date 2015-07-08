@@ -1,8 +1,9 @@
-class nagios::monitor {
+class nagios::monitor(ip_type=ec2_public_ipv4) {
+
    @@nagios_host { $fqdn:
         ensure => present,
         alias => $hostname,
-        address => $ec2_public_ipv4,
+        address => $ip_type,
         use => "linux-server",
    }
 #   @@nagios_service { "check_ping_${hostname}":
