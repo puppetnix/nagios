@@ -1,4 +1,4 @@
-class nagios::monitor(ip_type=ec2_public_ipv4) {
+class nagios::monitor($ip_type=ec2_public_ipv4) {
 
    @@nagios_host { $fqdn:
         ensure => present,
