@@ -1,6 +1,6 @@
 class nagios::nrpe {
 file_line { "allowed_hosts":
-        line => "allowed_hosts = 127.0.0.1,10.169.46.122",
+        line => "allowed_hosts = 127.0.0.1,${nagios_server}",
         path => "/etc/nagios/nrpe.cfg",
         match => "allowed_hosts",
         ensure => present,
