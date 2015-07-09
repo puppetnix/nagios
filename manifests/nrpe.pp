@@ -29,4 +29,10 @@ file_line { "allowed_hosts":
         host_name => "$fqdn",
         service_description => "${hostname}_check_users"
    }
+   @@nagios_service { "Check update ${hostname}":
+	check__command => "check_nrpe!check_apt_nrpe",
+	use => "generic-service",
+	host_name => "$fqdn",
+	service_description => "${hostname} Check update",
+   }
 }
