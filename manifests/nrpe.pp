@@ -5,23 +5,26 @@ file_line { "allowed_hosts":
         match => "allowed_hosts",
         ensure => present,
 	notify => Service['nagios-nrpe-server'],
+	require => Package['nagios-nrpe-server'],
    }
 file { "/etc/nagios/nrpe_local.cfg":
 	ensure => present,
 	content => template("nagios/nrpe_local.cfg.erb"),
         notify => Service['nagios-nrpe-server'],
+	require => Package['nagios-nrpe-server'],
 	}
 file_line { "enable config":
 	line => "include=/etc/nagios/nrpe_local.cfg",
 	ensure => present,
 	path => "/etc/nagios/nrpe.cfg",
 	notify => Service['nagios-nrpe-server'],
+	require => Package['nagios-nrpe-server'],
 	}
    @@nagios_service { "check_load_${hostname}":
         check_command => "check_nrpe!check_load",
         use => "generic-service",
         host_name => "$fqdn",
-        service_description => "${hostname}_check_load"
+        service_description => "${hostname}_check_load",
    }
    @@nagios_service { "check_total_procs_${hostname}":
         check_command => "check_nrpe!check_total_procs",

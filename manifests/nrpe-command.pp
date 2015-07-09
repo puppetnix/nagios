@@ -15,4 +15,20 @@ nagios_command  { 'resource title':
 	mode => '0644',
 	path => "/etc/nagios/nagios_command.cfg"
 	}
+ file_line { "add nagios":
+	line => "cfg_file=/etc/nagios/nagios_host.cfg",
+	path => "/usr/local/nagios/etc/nagios.cfg",
+	ensure => present,
+	notify => Service["nagios"],
+	}
+ file_line { "add nagios1":
+        line => "cfg_file=/etc/nagios/nagios_service.cfg",
+        path => "/usr/local/nagios/etc/nagios.cfg",
+        ensure => present,
+        notify => Service["nagios"],
+        } 
+ file { ['/etc/nagios/nagios_host.cfg', '/etc/nagios/nagios_service.cfg']:
+	mode => '0644',
+}
+
 }
