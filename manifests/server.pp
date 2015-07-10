@@ -1,5 +1,5 @@
 class nagios::server {
-	include nagios::nrpe_install, nagios::nrpe-command
+	include nagios::nrpe_command, nagios::nrpe_install
     service { nagios:
         ensure => running,
         enable => true,
