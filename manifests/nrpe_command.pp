@@ -29,6 +29,7 @@ nagios_command  { 'resource title':
         } 
  file { ['/etc/nagios/nagios_host.cfg', '/etc/nagios/nagios_service.cfg']:
 	mode => '0644',
+	ensure => present,
 }
 
 }
