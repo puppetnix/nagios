@@ -13,7 +13,8 @@ nagios_command  { 'resource title':
 	file { 'nagios_command':
 	ensure => present,
 	mode => '0644',
-	path => "/etc/nagios/nagios_command.cfg"
+	path => "/etc/nagios/nagios_command.cfg",
+	require => File['/etc/nagios/'],
 	}
  file_line { "add nagios":
 	line => "cfg_file=/etc/nagios/nagios_host.cfg",
@@ -30,6 +31,10 @@ nagios_command  { 'resource title':
  file { ['/etc/nagios/nagios_host.cfg', '/etc/nagios/nagios_service.cfg']:
 	mode => '0644',
 	ensure => present,
+	require => File['/etc/nagios/nagios_host.cfg', '/etc/nagios/nagios_service.cfg'],
 }
+	file { '/etc/nagios/':
+		ensure => directory,
+	}
 
 }

@@ -1,6 +1,5 @@
 class nagios::server {
 	Class['nagios::nrpe_command'] ~> Class['nagios::server']
-	require nagios::nrpe_command
 	include nagios::nrpe_command
     service { nagios:
         ensure => running,
