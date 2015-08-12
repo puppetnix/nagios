@@ -1,0 +1,23 @@
+#!/bin/bash
+total_mem=`free -m | grep Mem | awk '{print  $2}'`
+free_mem=`free -m | grep Mem | awk '{print  $4}'`
+echo "Total memory is $total_mem MB and free memory is $free_mem MB"
+case $free_mem in
+[1-50]*)
+echo "Critical  $free_mem MB free memory"
+exit 2
+;;
+[51-500]*)
+echo "Warning $free_mem MB free memory"
+exit 1
+;;
+[501-100000]*)
+echo "OK, free memory is MB $free_mem"
+exit 0
+;;
+*)
+echo "Free memory is unknown"
+exit 3
+;;
+esac
+

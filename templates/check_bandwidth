@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Nagios return codes
+STATE_OK=0
+STATE_WARNING=1
+STATE_CRITICAL=2
+STATE_UNKNOWN=3
+STATE_DEPENDENT=4
+
+if [ -z "$2" ]; then
+        echo
+        echo usage: $0 -i [network-interface]
+        exit $STATE_UNKNOWN
+fi
+
+while getopts i:a flag; do
+  case $flag in
+    i)
+      INTERFACE=$OPTARG;
+      break;
+      ;;
+     *)
+      echo usage: $0 -i [network-interface]
+      exit $STATE_UNKNOWN
+      ;;
+  esac
+done
+
+INTERVAL="10"
+
+R1=`cat /sys/class/net/${INTERFACE}/statistics/rx_bytes`
+T1=`cat /sys/class/net/${INTERFACE}/statistics/tx_bytes`
+sleep $INTERVAL
+R2=`cat /sys/class/net/${INTERFACE}/statistics/rx_bytes`
+T2=`cat /sys/class/net/${INTERFACE}/statistics/tx_bytes`
+TB=`expr $T2 - $T1`
+RB=`expr $R2 - $R1`
+TBPS=`expr $TB / $INTERVAL`
+RBPS=`expr $RB / $INTERVAL`
+TKBPS=`expr $TBPS`
+RKBPS=`expr $RBPS`
+echo "OK - TX ${INTERFACE}: $TKBPS B/s RX ${INTERFACE}: $RKBPS B/s | ${INTERFACE}_tx=${TKBPS} ${INTERFACE}_rx=${RKBPS}"
+exit $STATE_OK
+
