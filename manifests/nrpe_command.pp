@@ -2,7 +2,7 @@ class nagios::nrpe_command {
 nagios_command  { 'resource title':
     command_name => 'check_nrpe',
     ensure       => 'present',
-    command_line => '$USER1$/check_nrpe -H $HOSTADDRESS$ -c $ARG1$',
+    command_line => '$USER1$/check_nrpe -H $HOSTADDRESS$ -c $ARG1$ -t 30',
   }
   file_line { "nagios_command.cfg":
         line => "cfg_file=/etc/nagios/nagios_command.cfg",
@@ -31,7 +31,7 @@ nagios_command  { 'resource title':
  file { ['/etc/nagios/nagios_host.cfg', '/etc/nagios/nagios_service.cfg']:
 	mode => '0644',
 	ensure => present,
-	require => File['/etc/nagios/nagios_host.cfg', '/etc/nagios/nagios_service.cfg'],
+	require => File['/etc/nagios/'],
 }
 	file { '/etc/nagios/':
 		ensure => directory,

@@ -1,4 +1,4 @@
-class nagios::nrpe {
+class nagios::nrpe inherits nagios::agent  {
 file_line { "allowed_hosts":
         line => "allowed_hosts = 127.0.0.1,${::nagios::agent::nagios_server}",
         path => "/etc/nagios/nrpe.cfg",
@@ -58,5 +58,37 @@ file_line { "enable config":
         service_description => "${hostname} Check updates",
         notify => Service[nagios],
    }
+  @@nagios_service { "Check CPU load ${hostname}":
+	check_command => "check_nrpe!check_cpu",
+	use => "generic-service",
+	host_name => "$fqdn",
+	service_description => "${hostname} Check CPU load",
+	notify => Service[nagios],
+  }
+
+
+  @@nagios_service { "Check Memory load ${hostname}":
+        check_command => "check_nrpe!check_mem",
+        use => "generic-service",
+        host_name => "$fqdn",
+        service_description => "${hostname} Check Memory load",
+        notify => Service[nagios],
+  }
+  if $check_eth0 {
+	@@nagios_service { "Check eth0 stats ${hostname}":
+		check_command => "check_nrpe!check_eth0",
+		use => "generic-service",
+		host_name => "$fqdn",
+		service_description => "${hostname} Check eth0 stats",
+		notify => Service[nagios],
+	}}
+  @@nagios_service { "Check loopback stats ${hostname}":
+	check_command=> "check_nrpe!check_loop",
+	use => "generic-service",
+	host_name => "$fqdn",
+	service_description => "${hostname} Check lo stats",
+	notify => Service[nagios],
+	}
+
 
 }
