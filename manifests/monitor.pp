@@ -1,9 +1,9 @@
-class nagios::monitor($ip_type=$ec2_public_ipv4) {
+class nagios::monitor {
 
    @@nagios_host { $fqdn:
         ensure => present,
         alias => $hostname,
-        address => '50.18.195.106',
+        address => $ec2_public_ipv4,
         use => "linux-server",
 	check_command => check_ssh,
    }

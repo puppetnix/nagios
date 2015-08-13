@@ -22,4 +22,7 @@ class nagios::nrpe_install {
 		content => file('nagios/check_mem'),
 		mode => "0755",
 	}
+	package { 'facter':
+	ensure => latest,
+}
 }
