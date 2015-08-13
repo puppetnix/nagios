@@ -1,15 +1,15 @@
 class nagios::nrpe inherits nagios::agent  {
-file_line { "allowed_hosts":
-        line => "allowed_hosts = 127.0.0.1,${::nagios::agent::nagios_server}",
-        path => "/etc/nagios/nrpe.cfg",
-        match => "allowed_hosts",
-        ensure => present,
-	notify => Service['nagios-nrpe-server'],
-	require => Package['nagios-nrpe-server'],
-   }
+#file_line { "allowed_hosts":
+#        line => "allowed_hosts = 127.0.0.1,${::nagios::agent::nagios_server}",
+#        path => "/etc/nagios/nrpe.cfg",
+#        match => "allowed_hosts",
+#        ensure => present,
+#	notify => Service['nagios-nrpe-server'],
+#	require => Package['nagios-nrpe-server'],
+#   }
 file { "/etc/nagios/nrpe_local.cfg":
 	ensure => present,
-	content => template("nagios/nrpe_local.cfg.erb"),
+	content => template("nagios/nrpe_local.cfg"),
         notify => Service['nagios-nrpe-server'],
 	require => Package['nagios-nrpe-server'],
 	}
@@ -65,8 +65,6 @@ file_line { "enable config":
 	service_description => "${hostname} Check CPU load",
 	notify => Service[nagios],
   }
-
-
   @@nagios_service { "Check Memory load ${hostname}":
         check_command => "check_nrpe!check_mem",
         use => "generic-service",
@@ -74,21 +72,32 @@ file_line { "enable config":
         service_description => "${hostname} Check Memory load",
         notify => Service[nagios],
   }
-  if $check_eth0 {
-	@@nagios_service { "Check eth0 stats ${hostname}":
+  @@nagios_service { "Check eth0 stats ${hostname}":
 		check_command => "check_nrpe!check_eth0",
 		use => "generic-service",
 		host_name => "$fqdn",
 		service_description => "${hostname} Check eth0 stats",
 		notify => Service[nagios],
-	}}
+	}
   @@nagios_service { "Check loopback stats ${hostname}":
-	check_command=> "check_nrpe!check_loop",
+	check_command => "check_nrpe!check_loop",
 	use => "generic-service",
 	host_name => "$fqdn",
 	service_description => "${hostname} Check lo stats",
 	notify => Service[nagios],
 	}
-
-
+  @@nagios_service { "Check SSH ${hostname}":
+	check_command => "check_ssh",
+	use => "generic-service",
+	host_name => "$fqdn",
+	service_description => "${hostname} SSH check",
+	notify => Service[nagios],
+       }
+  @@nagios_service { "Check NTP ${hostname}":
+	check_command => "check_nrpe!check_ntp",
+	use => "generic-service",
+	host_name => "$fqdn",
+	service_description => "${hostname} NTP check",
+	notify => Service[nagios],
+	}
 }

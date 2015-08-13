@@ -1,0 +1,26 @@
+#!/bin/bash
+#Usage of CPU
+#echo Load of CPU is `top -b -n1 | grep "Cpu(s)" | awk '{print $1 $2}'`
+#Total Memory
+#echo Total memory is `free -h | grep Mem | awk '{print $1 $2}'`
+#Free Memory
+#echo Free memory is `free -h | grep Mem | awk '{print $1 $4}'`
+cpu_load=`top -b -n1 | grep "Cpu(s)" | awk '{print $2}'`
+case $cpu_load in
+[1-85]*)
+echo "OK $cpu_load% current CPU load"
+exit 0
+;;
+[85]*)
+echo "Warning $cpu_load% current CPU load"
+exit 1
+;;
+[86-100]*)
+echo "Critical $cpu_load% current CPU load"
+exit 2
+;;
+*)
+echo "Unknown $cpu_load% current CPU load"
+exit 3
+;;
+esac
