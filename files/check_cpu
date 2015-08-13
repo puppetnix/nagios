@@ -6,21 +6,12 @@
 #Free Memory
 #echo Free memory is `free -h | grep Mem | awk '{print $1 $4}'`
 cpu_load=`top -b -n1 | grep "Cpu(s)" | awk '{print $2}'`
-case $cpu_load in
-[1-85]*)
-echo "OK $cpu_load% current CPU load"
-exit 0
-;;
-[85]*)
-echo "Warning $cpu_load% current CPU load"
-exit 1
-;;
-[86-100]*)
-echo "Critical $cpu_load% current CPU load"
-exit 2
-;;
-*)
-echo "Unknown $cpu_load% current CPU load"
-exit 3
-;;
-esac
+if [ $cpu_load -lt 0 ]; then
+	echo "Unknown current CPU load" && exit 3
+elif [ $cpu_load -lt 75 ]; then
+	echo "OK, current CPU load is $cpu_load%" && exit 0
+elif [ $cpu_load -gt 75 ]; then 
+	echo "Warning, current CPU load is $cpu_load%" && exit 1
+elif [ $cpu_load -gt 90 ]; then
+	echo "Critical, current CPU load is $cpu_load%" && exit 2
+fi

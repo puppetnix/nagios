@@ -1,12 +1,12 @@
 class nagios::nrpe inherits nagios::agent  {
-#file_line { "allowed_hosts":
-#        line => "allowed_hosts = 127.0.0.1,${::nagios::agent::nagios_server}",
-#        path => "/etc/nagios/nrpe.cfg",
-#        match => "allowed_hosts",
-#        ensure => present,
-#	notify => Service['nagios-nrpe-server'],
-#	require => Package['nagios-nrpe-server'],
-#   }
+file_line { "allowed_hosts":
+        line => "allowed_hosts = 127.0.0.1,${::nagios::agent::nagios_server}",
+        path => "/etc/nagios/nrpe.cfg",
+        match => "allowed_hosts",
+        ensure => present,
+	notify => Service['nagios-nrpe-server'],
+	require => Package['nagios-nrpe-server'],
+  }
 file { "/etc/nagios/nrpe_local.cfg":
 	ensure => present,
 	content => template("nagios/nrpe_local.cfg"),
