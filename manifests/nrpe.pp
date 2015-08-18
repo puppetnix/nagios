@@ -4,21 +4,21 @@ file_line { "allowed_hosts":
         path => "/etc/nagios/nrpe.cfg",
         match => "allowed_hosts",
         ensure => present,
-	notify => Service['nagios-nrpe-server'],
-	require => Package['nagios-nrpe-server'],
+	notify => Service[$::nagios::params::nrpe_type],
+	require => Service[$::nagios::params::nrpe_type],
   }
 file { "/etc/nagios/nrpe_local.cfg":
 	ensure => present,
-	content => template("nagios/nrpe_local.cfg"),
-        notify => Service['nagios-nrpe-server'],
-	require => Package['nagios-nrpe-server'],
+	content => file("nagios/nrpe_local.cfg"),
+        notify => Service[$::nagios::params::nrpe_type],
+	require => Service[$::nagios::params::nrpe_type],
 	}
 file_line { "enable config":
 	line => "include=/etc/nagios/nrpe_local.cfg",
 	ensure => present,
 	path => "/etc/nagios/nrpe.cfg",
-	notify => Service['nagios-nrpe-server'],
-	require => Package['nagios-nrpe-server'],
+	notify => Service[$::nagios::params::nrpe_type],
+	require => Service[$::nagios::params::nrpe_type],
 	}
    @@nagios_service { "check_load_${hostname}":
         check_command => "check_nrpe!check_load",
@@ -44,20 +44,23 @@ file_line { "enable config":
         host_name => "$fqdn",
         service_description => "${hostname}_check_users"
    }
-   @@nagios_service { "Check disk ${hostname}":
+   if $check_disk 
+	{ @@nagios_service { "Check disk ${hostname}":
 	check_command => "check_nrpe!check_xvda1",
 	use => "generic-service",
 	host_name => "$fqdn",
 	service_description => "${hostname} Check disk",
 	notify => Service[nagios],
-   }
-   @@nagios_service { "Check updates ${hostname}":
+   } }
+   if $osfamily == 'debian' {
+	@@nagios_service { "Check updates ${hostname}":
         check_command => "check_nrpe!check_apt",
         use => "generic-service",
         host_name => "$fqdn",
         service_description => "${hostname} Check updates",
         notify => Service[nagios],
    }
+  }
   @@nagios_service { "Check CPU load ${hostname}":
 	check_command => "check_nrpe!check_cpu",
 	use => "generic-service",
